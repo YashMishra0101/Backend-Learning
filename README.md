@@ -20,4 +20,4 @@ It serves as my **personal backend learning space**, not a resource for public l
 The **main goal** of this repository is to:  
 > Learn backend development from scratch, build practical skills, and grow as a developer by working on real backend concepts and projects.
 
-💾 *I’ve uploaded this repository on GitHub purely for my personal convenience and usage — mainly to keep a backup of my code and easily access it if it ever gets lost locally.*
+💾 I’ve uploaded this repository on GitHub purely for my personal convenience and usage — mainly to keep a backup of my code and easily access it if it ever gets lost locally.
