@@ -1,0 +1,17 @@
+{
+  "name": "Backend-Learning-Project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type":"module",
+  "scripts": {
+    "dev":"nodemon src/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.17.1",
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}
