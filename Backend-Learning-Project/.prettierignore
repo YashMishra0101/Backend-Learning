@@ -1,0 +1,139 @@
+# =========================================================
+# 🖌 Full-Stack Project Prettier Ignore
+# =========================================================
+# 📌 Description:
+# This .prettierignore file is designed for modern full-stack
+# JavaScript/TypeScript projects.
+# 
+# It covers:
+# - Frontend: React + TypeScript + Tailwind CSS + Vite / Next.js
+# - Backend: Node.js + Express + MongoDB + Mongoose
+# - Package Manager: pnpm
+#
+# Purpose:
+# - Prevent Prettier from formatting build outputs, caches,
+#   environment files, and other generated files.
+# - Ensure only source code (TS, JSX/TSX, CSS) is formatted.
+# - Improve consistency and prevent accidental formatting of
+#   generated or sensitive files.
+#
+# Usage:
+# - Place this file at the root of your project.
+# - Prettier will automatically ignore the files/folders listed below.
+# =========================================================
+
+# ---------------------------------------------------------
+# VSCode and IDE
+# ---------------------------------------------------------
+.vscode
+.idea
+*.sublime-project
+*.sublime-workspace
+
+# ---------------------------------------------------------
+# Node & pnpm
+# ---------------------------------------------------------
+node_modules/
+.pnpm/
+pnpm-lock.yaml
+pnpm-workspace.yaml
+.pnpmfile.cjs
+.pnpm-debug.log
+.pnpm-cache/
+
+# ---------------------------------------------------------
+# Environment & Secrets
+# ---------------------------------------------------------
+.env
+*.env
+.env.*
+.env.local
+.env.development.local
+.env.production.local
+.env.test.local
+
+# ---------------------------------------------------------
+# Build / Output
+# ---------------------------------------------------------
+dist/
+build/
+.out/
+.output/
+.tmp/
+.temp/
+.cache/
+coverage/
+lib-cov/
+*.js.map
+*.css.map
+*.d.ts
+*.min.css
+*.tgz
+*.zip
+*.rar
+*.tar
+*.gz
+
+# Tailwind / PostCSS caches
+.tailwind-cache/
+.postcss-cache/
+.stylelintcache
+tailwind.config.js.timestamp*
+tailwind.config.cjs.timestamp*
+tailwind.config.ts.timestamp*
+.postcssrc.json
+.postcssrc.js
+.postcssrc.cjs
+
+# React / Vite / Next / Nuxt / Svelte
+.vite/
+.next/
+.nuxt/
+.svelte-kit/
+vite.config.ts.timestamp*
+
+# ---------------------------------------------------------
+# Miscellaneous / temporary / system
+# ---------------------------------------------------------
+*.log
+*.tmp
+*.bak
+*~
+*.swp
+.DS_Store
+Thumbs.db
+tmp/
+temp/
+pids/
+*.pid
+*.seed
+*.pid.lock
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# MongoDB dumps / database files
+dump/
+*.bson
+*.lock
+data/
+db/
+
+# Optional build tools
+.grunt/
+.fusebox/
+.gulp/
+.dynamodb/
+.tern-port/
+
+# Serverless & static site outputs
+.serverless/
+.vuepress/dist
+.docusaurus/
+.storybook/
+public/static/
+sw.js
+sw.js.map
+service-worker.js
+
+# =========================================================
+# End of Prettier Ignore
+# =========================================================
