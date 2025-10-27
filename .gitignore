@@ -1,25 +1,234 @@
-# Logs
-logs
+# =========================================================
+# 🧠 Full-Stack Project .gitignore (React + Node + Express + MongoDB + pnpm + TypeScript + Mongoose + Tailwind CSS)
+# =========================================================
+# 📌 Description:
+# This .gitignore file is designed for a modern full-stack JavaScript project.
+# It covers both frontend (React + TypeScript + Tailwind CSS) and backend (Node.js + Express + MongoDB + Mongoose),
+# using pnpm as the package manager.
+#
+# It prevents sensitive data (like .env files), build outputs, caches, dependencies,
+# and unnecessary files from being pushed to Git repositories.
+# =========================================================
+
+
+# ---------------------------------------------------------
+# 🌍 Universal
+# ---------------------------------------------------------
+
+# Logs and temp files
 *.log
+*.tmp
+*.bak
+*~
+*.swp
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Environment & config files (security)
+.env
+*.env
+.env.*
+.env.local
+.env.development.local
+.env.production.local
+.env.test.local
+
+# Local configuration files
+*.local
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+
+# ---------------------------------------------------------
+# ⚙️ Node.js / Express / Mongoose / MongoDB
+# ---------------------------------------------------------
+
+# Dependencies
+node_modules/
+bower_components/
+jspm_packages/
+web_modules/
+
+# Cache & debug logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
+# Coverage & test outputs
+coverage/
+lib-cov/
+*.lcov
+.nyc_output/
+test-output/
 
-# Editor directories and files
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Diagnostic reports
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# MongoDB dump or data
+dump/
+*.bson
+*.lock
+data/
+db/
+
+# Build / dist folders (for compiled or bundled files)
+build/
+dist/
+temp/
+.tmp/
+.out/
+.output/
+.cache/
+webpack-cache/
+parcel-cache/
+.esbuild/
+
+
+# ---------------------------------------------------------
+# ⚛️ React (Frontend)
+# ---------------------------------------------------------
+
+# React build output
+/build
+/.next
+/out
+/.nuxt
+/.svelte-kit
+.vite/
+vite.config.ts.timestamp*
+
+# Test coverage
+/coverage
+
+# Editor settings
+.editorconfig
+
+# Service worker
+sw.js
+sw.js.map
+service-worker.js
+
+# React Native
+.expo/
+.expo-shared/
+
+
+# ---------------------------------------------------------
+# 🎨 Tailwind CSS
+# ---------------------------------------------------------
+
+# Tailwind generated cache & config files
+.tailwind-cache/
+tailwind.config.js.timestamp*
+tailwind.config.cjs.timestamp*
+tailwind.config.ts.timestamp*
+
+# PostCSS cache & related configs
+.postcss-cache/
+.postcssrc.json
+.postcssrc.js
+.postcssrc.cjs
+.stylelintcache
+
+# Tailwind build output (if generated separately)
+*.css.map
+*.css.d.ts
+*.min.css
+
+
+# ---------------------------------------------------------
+#  TypeScript
+# ---------------------------------------------------------
+
+# TypeScript build info & cache
+*.tsbuildinfo
+tsconfig.tsbuildinfo
+
+# Compiled output
+*.js
+*.jsx
+*.d.ts
+*.map
+
+
+# ---------------------------------------------------------
+#  pnpm specific
+# ---------------------------------------------------------
+
+# pnpm store and workspace
+.pnpm/
+.pnpm-store/
+pnpm-lock.yaml
+pnpm-workspace.yaml
+pnpm-lock.yaml.bak
+.pnpmfile.cjs
+.pnpm-debug.log
+.pnpm-cache/
+
+
+# ---------------------------------------------------------
+#  Miscellaneous
+# ---------------------------------------------------------
+
+# ESLint / StyleLint / Prettier cache
+.eslintcache
+.stylelintcache
+.prettier-cache
+
+# Optional build tools
+.grunt/
+.fusebox/
+.gulp/
+.dynamodb/
+.tern-port
+
+# Temporary folders
+tmp/
+temp/
+
+# Compiled archives
+*.tgz
+*.zip
+*.rar
+*.tar
+*.gz
+
+# Serverless, documentation & static sites
+.serverless/
+.vuepress/dist
+.docusaurus/
+.storybook/
+public/static/
+
+
+# ---------------------------------------------------------
+#  Optional IDE / Editor files
+# ---------------------------------------------------------
+
+# JetBrains
+.idea/
+*.iml
+
+# VSCode
 .vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
 !.vscode/extensions.json
-.idea
-.DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-.env
+
+
+# ---------------------------------------------------------
+# End of file
+# ---------------------------------------------------------
