@@ -157,8 +157,8 @@ tailwind.config.ts.timestamp*
 tsconfig.tsbuildinfo
 
 # Compiled output
-*.js
-*.jsx
+# *.js
+# *.jsx
 *.d.ts
 *.map
 
