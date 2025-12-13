@@ -1,11 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
 import toast from "react-hot-toast";
 
 const Register = () => {
   const navigate = useNavigate();
-  const { login } = useAuth();
 
   const [form, setForm] = useState({
     username: "",
@@ -24,9 +22,8 @@ const Register = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     // In a real app, you would validate password match and hitting an API here
-    login({ username: form.username, email: form.email });
-    toast.success("Account created successfully!");
-    navigate("/");
+    toast.success("Account created successfully! Please Login.");
+    navigate("/login");
   };
 
   return (
