@@ -1,0 +1,37 @@
+import React from "react";
+
+const Button = ({
+  children,
+  variant = "primary",
+  size = "default",
+  className = "",
+  ...props
+}) => {
+  const baseStyles =
+    "inline-flex items-center justify-center font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-900 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer";
+
+  const variants = {
+    primary: "btn-primary",
+    secondary: "btn-secondary",
+    ghost: "text-gray-600 hover:text-gray-900 hover:bg-gray-100",
+    danger: "bg-red-600 text-white hover:bg-red-700 shadow-sm",
+  };
+
+  const sizes = {
+    sm: "px-3 py-1.5 text-sm rounded-md",
+    default: "px-6 py-3 text-base rounded-lg",
+    lg: "px-8 py-4 text-lg rounded-xl",
+    icon: "p-2 rounded-lg",
+  };
+
+  return (
+    <button
+      className={`${baseStyles} ${variants[variant]} ${sizes[size]} ${className}`}
+      {...props}
+    >
+      {children}
+    </button>
+  );
+};
+
+export default Button;
