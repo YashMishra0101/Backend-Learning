@@ -51,7 +51,7 @@ export const loginUser = async (req, res) => {
     const isPasswordMatch = await emailExit.comparePassword(password);
 
     if (!isPasswordMatch) {
-      return res.status(400).json({ message: "Password not matched" });
+      return res.status(400).json({ message: "Password does not matched" });
     }
 
     return res.status(200).json({
