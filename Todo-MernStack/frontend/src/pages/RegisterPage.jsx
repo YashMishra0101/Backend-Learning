@@ -26,7 +26,7 @@ const RegisterPage = () => {
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <Input
-              label="Full Name"
+              label="Name"
               type="text"
               placeholder="John Doe"
               required

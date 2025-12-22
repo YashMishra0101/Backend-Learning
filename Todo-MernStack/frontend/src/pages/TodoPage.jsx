@@ -69,9 +69,13 @@ const TodoPage = () => {
   };
 
   const handleLogout = () => {
+    localStorage.clear();
+    sessionStorage.clear();
     toast.success("Logged out successfully");
     navigate("/login");
   };
+
+  const dummyName = "Yash";
 
   return (
     <Layout>
@@ -79,17 +83,15 @@ const TodoPage = () => {
         {/* Header */}
         <div className="flex items-center justify-between mb-8 card-panel p-6">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">My Tasks</h1>
+            <h1 className="text-2xl font-bold text-gray-900">
+              Welcome, {dummyName}
+            </h1>
             <p className="text-gray-500 text-sm mt-1">
-              {todos.filter((t) => !t.completed).length} tasks remaining
+              My Tasks • {todos.filter((t) => !t.completed).length} tasks
+              remaining
             </p>
           </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={handleLogout}
-            className="text-gray-500 hover:text-gray-900"
-          >
+          <Button variant="danger" size="sm" onClick={handleLogout}>
             <LogOut className="mr-2 h-4 w-4" />
             Sign Out
           </Button>

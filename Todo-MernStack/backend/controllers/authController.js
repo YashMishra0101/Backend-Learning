@@ -1,23 +1,22 @@
 import { User } from "../models/User.js";
+import { generateToken } from "../utils/generateToken.js";
 
 export const registerUser = async (req, res) => {
-  const { fullName, email, password } = req.body;
+  const { name, email, password } = req.body;
 
-  if (!fullName || !email || !password) {
+  if (!name || !email || !password) {
     return res.status(400).json({ message: "Please include all fields" });
-    return;
   }
 
   //check if user exit
-  const userExit = await User.findOne({ email });
-  if (userExit) {
-    return res.status(400).json({ message: "Email id already exits" });
-    return;
+  const userExist = await User.findOne({ email });
+  if (userExist) {
+    return res.status(400).json({ message: "Email already exits" });
   }
 
   // The 'pre' save hook in User.js will automatically hash the password here.
   const user = await User.create({
-    fullName,
+    name,
     email,
     password,
   });
@@ -25,11 +24,13 @@ export const registerUser = async (req, res) => {
   if (user) {
     return res.status(201).json({
       _id: user.id,
-      fullName: user.fullName,
+      name: user.name,
       email: user.email,
+      token: generateToken(user._id),
+      message: "Signup successful",
     });
   } else {
-    res.status(400).json({ message: "Invalid user data" });
+    res.status(400).json({ message: "Server error" });
   }
 };
 
@@ -42,22 +43,23 @@ export const loginUser = async (req, res) => {
         .status(400)
         .json({ message: "Email and Password are required" });
     }
-    const emailExit = await User.findOne({ email });
+    const user = await User.findOne({ email });
 
-    if (!emailExit) {
-      return res.status(400).json({ message: "Email does not exist" });
+    if (!user) {
+      return res.status(400).json({ message: "Invalid email or password" });
     }
 
-    const isPasswordMatch = await emailExit.comparePassword(password);
+    const isPasswordMatch = await user.comparePassword(password);
 
     if (!isPasswordMatch) {
-      return res.status(400).json({ message: "Password does not matched" });
+      return res.status(400).json({ message: "Invalid email or password" });
     }
 
     return res.status(200).json({
-      _id: emailExit._id,
-      fullName: emailExit.fullName,
-      email: emailExit.email,
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      token: generateToken(user._id),
       message: "Login successful",
     });
   } catch (error) {
