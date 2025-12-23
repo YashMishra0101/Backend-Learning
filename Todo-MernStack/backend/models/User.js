@@ -24,7 +24,7 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-userSchema.pre("save", async function (next) {
+userSchema.pre("save", async function () {
   // If password is not modified (e.g., updating just the name), skip hashing
   if (this.isModified("password")) {
     //Hash the password

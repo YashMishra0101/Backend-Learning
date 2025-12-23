@@ -2,35 +2,39 @@ import { User } from "../models/User.js";
 import { generateToken } from "../utils/generateToken.js";
 
 export const registerUser = async (req, res) => {
-  const { name, email, password } = req.body;
+  try {
+    const { name, email, password } = req.body;
 
-  if (!name || !email || !password) {
-    return res.status(400).json({ message: "Please include all fields" });
-  }
+    if (!name || !email || !password) {
+      return res.status(400).json({ message: "Please include all fields" });
+    }
 
-  //check if user exit
-  const userExist = await User.findOne({ email });
-  if (userExist) {
-    return res.status(400).json({ message: "Email already exits" });
-  }
+    //check if user exists
+    const userExist = await User.findOne({ email });
+    if (userExist) {
+      return res.status(400).json({ message: "Email already exists" });
+    }
 
-  // The 'pre' save hook in User.js will automatically hash the password here.
-  const user = await User.create({
-    name,
-    email,
-    password,
-  });
-
-  if (user) {
-    return res.status(201).json({
-      _id: user.id,
-      name: user.name,
-      email: user.email,
-      token: generateToken(user._id),
-      message: "Signup successful",
+    // The 'pre' save hook in User.js will automatically hash the password here.
+    const user = await User.create({
+      name,
+      email,
+      password,
     });
-  } else {
-    res.status(400).json({ message: "Server error" });
+
+    //Send to the frontend
+    if (user) {
+      return res.status(201).json({
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        token: generateToken(user._id),
+        message: "Signup successful",
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -63,7 +67,7 @@ export const loginUser = async (req, res) => {
       message: "Login successful",
     });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.status(500).json({ message: "Server error" });
   }
 };
