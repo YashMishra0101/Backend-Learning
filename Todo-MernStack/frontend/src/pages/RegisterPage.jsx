@@ -1,15 +1,33 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { User, Mail, Lock, ArrowRight } from "lucide-react";
+import { ArrowRight, Eye, EyeOff } from "lucide-react";
 import Layout from "../components/Layout";
 import Button from "../components/ui/Button";
 import Input from "../components/ui/Input";
 
 const RegisterPage = () => {
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (formData.password !== formData.confirmPassword) {
+      alert("Passwords do not match!");
+      return;
+    }
+    console.log("Registering with:", formData);
     navigate("/login");
   };
 
@@ -25,26 +43,53 @@ const RegisterPage = () => {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            <Input
-              label="Name"
-              type="text"
-              placeholder="John Doe"
-              required
-            />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <Input
+                label="Name"
+                name="name"
+                type="text"
+                placeholder="John Doe"
+                value={formData.name}
+                onChange={handleChange}
+                required
+              />
 
-            <Input
-              label="Email Address"
-              type="email"
-              placeholder="you@example.com"
-              required
-            />
+              <Input
+                label="Email Address"
+                name="email"
+                type="email"
+                placeholder="you@example.com"
+                value={formData.email}
+                onChange={handleChange}
+                required
+              />
 
-            <Input
-              label="Password"
-              type="password"
-              placeholder="••••••••"
-              required
-            />
+              <Input
+                label="Password"
+                name="password"
+                type={showPassword ? "text" : "password"}
+                placeholder="••••••••"
+                value={formData.password}
+                onChange={handleChange}
+                rightIcon={showPassword ? EyeOff : Eye}
+                onRightIconClick={() => setShowPassword(!showPassword)}
+                required
+              />
+
+              <Input
+                label="Confirm Password"
+                name="confirmPassword"
+                type={showConfirmPassword ? "text" : "password"}
+                placeholder="••••••••"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                rightIcon={showConfirmPassword ? EyeOff : Eye}
+                onRightIconClick={() =>
+                  setShowConfirmPassword(!showConfirmPassword)
+                }
+                required
+              />
+            </div>
 
             <Button type="submit" className="w-full group">
               Create Account
