@@ -1,0 +1,187 @@
+# ---------------------------------------------------------
+# 🌍 Universal (Common for all environments)
+# ---------------------------------------------------------
+*.log
+*.tmp
+*.bak
+*~
+*.swp
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Environment files (security)
+.env
+*.env
+.env.*
+.env.local
+.env.development.local
+.env.production.local
+.env.test.local
+
+# Local config files (not for production)
+*.local
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+
+# ---------------------------------------------------------
+# ⚙️ Node.js / Express / MongoDB / Mongoose
+# ---------------------------------------------------------
+# Dependency folders
+node_modules/
+bower_components/
+jspm_packages/
+web_modules/
+
+# Debug & error logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Test coverage & reports
+coverage/
+lib-cov/
+*.lcov
+.nyc_output/
+test-output/
+
+# Runtime & process data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Diagnostic reports
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# MongoDB data or dumps
+dump/
+*.bson
+*.lock
+data/
+db/
+
+# Build and compiled output
+build/
+dist/
+temp/
+.tmp/
+.out/
+.output/
+.cache/
+webpack-cache/
+parcel-cache/
+.esbuild/
+
+
+# ---------------------------------------------------------
+# ⚛️ React (Frontend)
+# ---------------------------------------------------------
+# React / Vite / Next.js build output
+/build
+/.next
+/out
+/.nuxt
+/.svelte-kit
+.vite/
+vite.config.js.timestamp*
+
+# Editor configs
+.editorconfig
+
+# Service worker / static assets
+sw.js
+sw.js.map
+service-worker.js
+
+# React Native
+.expo/
+.expo-shared/
+
+
+# ---------------------------------------------------------
+# 🎨 Tailwind CSS
+# ---------------------------------------------------------
+# Tailwind-generated cache and config timestamps
+.tailwind-cache/
+tailwind.config.js.timestamp*
+tailwind.config.cjs.timestamp*
+
+# PostCSS & Stylelint caches
+.postcss-cache/
+.postcssrc.json
+.postcssrc.js
+.postcssrc.cjs
+.stylelintcache
+
+# Compiled CSS outputs
+*.css.map
+*.min.css
+
+
+# ---------------------------------------------------------
+# 📦 pnpm Specific
+# ---------------------------------------------------------
+# pnpm cache and workspace-related files
+.pnpm/
+.pnpm-store/
+pnpm-lock.yaml
+pnpm-workspace.yaml
+pnpm-lock.yaml.bak
+.pnpmfile.cjs
+.pnpm-debug.log
+.pnpm-cache/
+
+
+# ---------------------------------------------------------
+# 🧹 Miscellaneous
+# ---------------------------------------------------------
+# Cache and lint tool data
+.eslintcache
+.stylelintcache
+.prettier-cache
+
+# Build tools and temporary folders
+.grunt/
+.fusebox/
+.gulp/
+.dynamodb/
+.tern-port
+
+tmp/
+temp/
+
+# Compressed files
+*.tgz
+*.zip
+*.rar
+*.tar
+*.gz
+
+# Static and documentation tools
+.serverless/
+.vuepress/dist
+.docusaurus/
+.storybook/
+public/static/
+
+
+# ---------------------------------------------------------
+# 💻 IDE / Editor
+# ---------------------------------------------------------
+# JetBrains IDEs
+.idea/
+*.iml
+
+# VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
