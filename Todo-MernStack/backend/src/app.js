@@ -11,14 +11,6 @@ app.use(express.json()); // Parse JSON body
 
 app.use("/api/auth",authRoutes)
 
-app.get("/", (req, res) => {
-  res.status(200).json({
-    success: true,
-    message: "Backend is running fine",
-  });
-});
-
-
 app.use(notFound);
 app.use(errorHandler)
 

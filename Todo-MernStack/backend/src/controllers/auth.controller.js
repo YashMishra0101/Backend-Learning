@@ -6,7 +6,7 @@ export const register = async (req, res, next) => {
   try {
     const { name, email, password } = req.body;
 
-    if ((!name, !email, !password)) {
+    if (!name || !email || !password) {
       return res.status(400).json({
         success: false,
         message: "All fields are required",
@@ -35,11 +35,11 @@ export const register = async (req, res, next) => {
       },
     });
   } catch (error) {
-    next(error);
+    next(error);//If a middleware function has 4 parameters, Express treats it as an error-handling middleware.
   }
 };
 
-export const login = async () => {
+export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ email }).select("+password");
@@ -65,6 +65,6 @@ export const login = async () => {
       accessToken,
     });
   } catch (error) {
-    next(error);
+    next(error);//If a middleware function has 4 parameters, Express treats it as an error-handling middleware.
   }
 };
