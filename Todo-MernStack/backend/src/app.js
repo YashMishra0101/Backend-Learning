@@ -11,7 +11,7 @@ app.use(express.json()); // Parse JSON body
 
 app.use("/api/auth",authRoutes)
 
-app.use(notFound);
 app.use(errorHandler)
+app.use(notFound);
 
 export default app;
