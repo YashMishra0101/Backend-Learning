@@ -1,3 +1,4 @@
+//server.js is the entry point of the application where the server is started
 import app from "./app.js";
 import { env } from "./config/env.js";
 import connectDB from "./db.js";

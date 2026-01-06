@@ -1,3 +1,4 @@
+//db.js is responsible for connecting the application to MongoDB and keeping the database logic separate.
 import mongoose from "mongoose";
 import { env } from "./config/env.js";
 

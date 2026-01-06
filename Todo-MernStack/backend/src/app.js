@@ -1,4 +1,5 @@
 import express from "express";
+//app.js is used to set up the Express application, including middlewares, routes, and error handling. 
 import cors from "cors";
 import { notFound } from "./middlewares/notFound.middleware.js";
 import { errorHandler } from "./middlewares/error.middleware.js";
