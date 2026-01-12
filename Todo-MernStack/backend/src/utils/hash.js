@@ -45,7 +45,9 @@ Practical industry recommendations:
 Note:
 - Cost factor affects hashing time, means 10 means 1024 hashing , NOT hash length
 - Higher cost = slower hashing = stronger security
-- Security comes from time delay, not RAM usage (Memory-based protection = Argon2 feature, not bcrypt, Argon2 uses time + memory CPU + RAM)
+- Security comes from time delay, not RAM usage (Memory-based protection = Argon2 feature, not bcrypt, Argon2 uses time + memory CPU + RAM), bcrypt only uses CPU time bcrypt based on time delay.
+- During registration, cost factor is 2^12 = 4096 rounds same happens during login password verification.
+-A bcrypt cost factor of 12 means the hashing algorithm performs 2¹² (4096) rounds of internal computation, making brute-force attacks exponentially more expensive and intentionally introducing a small delay during password verification. While this delay is barely noticeable for legitimate users who log in occasionally, it becomes extremely costly for attackers who attempt to test millions of password combinations.
 
 5️⃣ Why bcrypt is slow on purpose
 - Login attempts by real users are few (acceptable delay ~100–300ms)
@@ -54,114 +56,78 @@ Note:
 
 */
 
+// import bcrypt from "bcrypt";
+
+// const COST_FACTOR = 12;
+
+// export const hashPassword = (password) => {
+//   // Generates salt automatically and hashes password using cost factor
+//   return bcrypt.hash(password, COST_FACTOR);
+// };
+
+// export const comparePassword = async (password, hashedPassword) => {
+//   // Extracts salt + cost factor from stored hash and compares securely
+//   return bcrypt.compare(password, hashedPassword);
+// };
+
 /*
-import bcrypt from "bcrypt";
+import argon2 from "argon2";
 
-const COST_FACTOR = 12;
+export const hashPassword = async (password) => {
+  return await argon2.hash(password, {
 
-export const hashPassword = (password) => {
-  // Generates salt automatically and hashes password using cost factor
-  return bcrypt.hash(password, COST_FACTOR);
+
+    Industry standard → always use argon2id (Argon2d → fast, GPU-resistant, but unsafe against side-channel attacks, Agon2i → safe against side-channels, weaker vs GPUs, that's why argon2id combines both is safest and strongest)
+    (A CPU is optimized for complex, sequential tasks and decision-making, whereas a GPU is optimized for executing the same simple operation across thousands of cores in parallel. Because brute-force attacks involve trying millions of password combinations using the same repeated computations, GPUs are far more efficient for this purpose than CPUs, which is why attackers commonly rely on GPUs for large-scale password-cracking attempts.)
+    A side-channel attack is: Stealing secret information by observing how a system behaves, not by breaking the algorithm itself.
+    Examples: Measuring execution time, Watching memory access patternsObserving CPU or cache behavior
+    - If correct passwords take slightly longer to process, an attacker can guess information from timing differences, Argon2id protects against side-channel attacks by using data-independent memory access.
+
+
+    type: argon2.argon2id,
+
+    
+    2 ** 16 = 65536 -> 65536 KB = 64 MB
+    Argon2 must allocate 64 MB of RAM per hashing operation, when a user registers and  logs in.
+    Attackers use GPUs because: GPUs are very fast and GPUs have limited memory per core, So Argon2 requires 64 MB per attempt:1 attempt → needs 64 MB so 1 million attempts → needs 64 TB of RAM ❌ So attackers cannot: run millions of guesses in parallel.
+    For normal users Login attempt → uses 64 MB but normal user doesn’t notice.
+    
+
+    memoryCost: 2 ** 16,
+    
+ 
+    timeCost in Argon2 means how many times the password-hashing work is repeated. If timeCost is 3, Argon2 does the same work three times, one after another. Doing the work multiple times makes password hashing slower on purpose, which is good for security because attackers have to spend more time for every password they try. For normal users, this small delay is not noticeable, but for hackers trying thousands or millions of passwords, it becomes very slow and difficult.
+    
+
+    timeCost: 3,
+    
+    
+    parallelism: 1 means Argon2 uses a single CPU thread to hash the password, ensuring controlled CPU usage and stable server performance.
+    If you set the memory cost to 2**16, that means each hashing run uses 64 megabytes of memory. If you set the time cost to three, the hashing is performed three times. And if you set parallelism to two, then during each of those hashing runs, it uses two threads to do the work in parallel. So in short, three iterations of hashing, each using 64 MB of memory, and each iteration using two threads.  usage and stable server performance.
+     
+    parallelism: 2,
+  });
 };
 
+Extracts the salt and parameters from the stored hash then Re-hashes the provided password with those same parameters then Compares the two hashes.
+
 export const comparePassword = async (password, hashedPassword) => {
-  // Extracts salt + cost factor from stored hash and compares securely
-  return bcrypt.compare(password, hashedPassword);
+  return await argon2.verify(hashedPassword, password);
 };
 
 */
 
-
-
-import argon2 from "argon2"; 
+import argon2 from "argon2";
 
 export const hashPassword = async (password) => {
   return await argon2.hash(password, {
-    // ----------------------------------------------------------
-    // type: argon2.argon2id
-    // ----------------------------------------------------------
-    // Chooses the Argon2 variant.
-    // argon2id is recommended because:
-    // - It is resistant to GPU-based brute-force attacks
-    // - It is safe against side-channel attacks
-    // This is the industry-standard choice for password hashing.
-    // ----------------------------------------------------------
     type: argon2.argon2id,
-
-    // ----------------------------------------------------------
-    // memoryCost: 2 ** 16
-    // ----------------------------------------------------------
-    // Defines how much memory Argon2 must use PER HASH ATTEMPT.
-    // 2^16 = 65536 KB = 64 MB RAM.
-    //
-    // This memory is required:
-    // - During registration
-    // - During every login password verification
-    //
-    // Purpose:
-    // - Makes GPU and parallel attacks extremely expensive
-    // - Attackers cannot scale easily because memory is costly
-    // ----------------------------------------------------------
     memoryCost: 2 ** 16,
-
-    // ----------------------------------------------------------
-    // timeCost: 3
-    // ----------------------------------------------------------
-    // Number of SEQUENTIAL PASSES Argon2 performs over the memory.
-    // This is NOT like bcrypt's 2^n rounds.
-    //
-    // timeCost = 3 means:
-    // - Argon2 processes the same 64 MB memory 3 times
-    // - Each pass increases CPU work and security
-    //
-    // More timeCost = slower hashing = stronger protection
-    // 3 is a balanced, production-safe default.
-    // ----------------------------------------------------------
     timeCost: 3,
-
-    // ----------------------------------------------------------
-    // parallelism: 1
-    // ----------------------------------------------------------
-    // Number of CPU threads used AT THE SAME TIME per hash.
-    //
-    // parallelism = 1 means:
-    // - Hashing runs on a single thread
-    // - timeCost iterations happen sequentially on that one thread
-    //
-    // This prevents:
-    // - CPU spikes
-    // - Server overload during high traffic
-    //
-    // Recommended value for backend APIs.
-    // ----------------------------------------------------------
-    parallelism: 1,
+    parallelism: 2,
   });
 };
 
-// ============================================================
-// comparePassword
-// ------------------------------------------------------------
-// Used during USER LOGIN.
-// Verifies whether the entered password matches the stored hash.
-// ============================================================
 export const comparePassword = async (password, hashedPassword) => {
-  // ----------------------------------------------------------
-  // argon2.verify(storedHash, plainPassword)
-  // ----------------------------------------------------------
-  // Order matters:
-  // - First argument: hashed password from database
-  // - Second argument: user-entered plain password
-  //
-  // Internally, Argon2:
-  // - Extracts salt from the stored hash
-  // - Reads memoryCost, timeCost, parallelism
-  // - Re-hashes the entered password using SAME parameters
-  // - Compares the results securely
-  //
-  // Returns:
-  // - true  → password is correct
-  // - false → password is incorrect
-  // ----------------------------------------------------------
   return await argon2.verify(hashedPassword, password);
 };
-
