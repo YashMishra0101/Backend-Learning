@@ -9,7 +9,7 @@ export const protect = async (req, res, next) => {
     //Read token from Authorization header
     // Format: "Authorization: Bearer <token>"
 
-    /*
+/*
   Example of an actual request header
   const headers = {
   Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxMjM0NTY3ODkwIiwiaWF0IjoxNjcwNDA5ODIyfQ.sflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"

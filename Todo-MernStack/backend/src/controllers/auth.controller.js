@@ -1,6 +1,9 @@
 import { User } from "../models/user.model.js";
 import { hashPassword, comparePassword } from "../utils/hash.js";
-import { generateAccessToken } from "../utils/jwt.js";
+import { RefreshToken } from "../models/refreshToken.model.js";
+import { generateAccessToken, generateRefreshToken } from "../utils/jwt.js";
+import jwt from "jsonwebtoken";
+import { env } from "../config/env.js";
 
 export const register = async (req, res, next) => {
   try {
@@ -35,11 +38,11 @@ export const register = async (req, res, next) => {
       },
     });
   } catch (error) {
-    next(error);//If a middleware function has 4 parameters, Express treats it as an error-handling middleware.
+    next(error); //If a middleware function has 4 parameters, Express treats it as an error-handling middleware.
   }
 };
 
-export const login = async (req, res) => {
+export const login = async (req, res,next) => {
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ email }).select("+password");
@@ -60,11 +63,65 @@ export const login = async (req, res) => {
       userId: user._id,
     });
 
+    const refreshToken = generateRefreshToken({ userId: user._id });
+
+    await RefreshToken.create({
+      user: user._id,
+      token: refreshToken,
+      expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+    });
+
     res.status(200).json({
       success: true,
       accessToken,
+      refreshToken
     });
   } catch (error) {
-    next(error);//If a middleware function has 4 parameters, Express treats it as an error-handling middleware.
+    next(error); //If a middleware function has 4 parameters, Express treats it as an error-handling middleware.
+  }
+};
+
+export const refreshAccessToken = async (req, res, next) => {
+  try {
+    const {refreshToken} = req.body;
+
+    if (!refreshToken) {
+      return res.status(401).json({
+        success: false,
+        message: "Refresh token missing",
+      });
+    }
+    const storedToken = await RefreshToken.findOne({ token: refreshToken });
+    if (!storedToken) {
+      return res
+        .status(401)
+        .json({ success: false, message: "Invalid refresh token" });
+    }
+    const decoded = jwt.verify(refreshToken, env.JWT_SECRET);
+
+    const newAccessToken = generateAccessToken({
+      userId: decoded.userId,
+    });
+    res.status(200).json({
+      success: true,
+      accessToken: newAccessToken,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const logout = async (req, res, next) => {
+  try {
+    const { refreshToken } = req.body;
+
+    await RefreshToken.deleteOne({ token: refreshToken });
+
+    res.status(200).json({
+      success: true,
+      message: "Logged out successfully",
+    });
+  } catch (error) {
+    next(error);
   }
 };
