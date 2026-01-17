@@ -4,11 +4,13 @@ import { ArrowRight, Eye, EyeOff } from "lucide-react";
 import Layout from "../components/Layout";
 import Button from "../components/ui/Button";
 import Input from "../components/ui/Input";
-
+import { registerUser } from "../services/auth.service";
+import toast from "react-hot-toast"; // Import Toast
 const RegisterPage = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); //Loading State
 
   const [formData, setFormData] = useState({
     name: "",
@@ -21,14 +23,30 @@ const RegisterPage = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (formData.password !== formData.confirmPassword) {
       alert("Passwords do not match!");
       return;
     }
+
+    setIsLoading(true);
+    try {
+      // Call the API
+      const response = await registerUser({
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+      });
+      toast.success(response.message || "Account created successfully");
+      navigate("/login");
+    } catch (error) {
+      toast.error(error.message || "Registration failed");
+    } finally {
+      setIsLoading(false);
+    }
+
     console.log("Registering with:", formData);
-    navigate("/login");
   };
 
   return (
@@ -91,9 +109,11 @@ const RegisterPage = () => {
               />
             </div>
 
-            <Button type="submit" className="w-full group">
-              Create Account
-              <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            <Button type="submit" className="w-full group" disabled={isLoading}>
+              {isLoading ? "Creating Account..." : "Create Account"}
+              {!isLoading && (
+                <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              )}
             </Button>
           </form>
 

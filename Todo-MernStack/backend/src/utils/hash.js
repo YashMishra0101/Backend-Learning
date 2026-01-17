@@ -71,41 +71,34 @@ Note:
 // };
 
 /*
+
+---argon2 
+
 import argon2 from "argon2";
 
 export const hashPassword = async (password) => {
   return await argon2.hash(password, {
 
-
-    Industry standard → always use argon2id (Argon2d → fast, GPU-resistant, but unsafe against side-channel attacks, Agon2i → safe against side-channels, weaker vs GPUs, that's why argon2id combines both is safest and strongest)
+  --type: argon2.argon2id,
+    Industry standard → always use argon2id (Argon2d → fast, GPU-resistant, but unsafe against side-channel attacks, Agon2i → safe against side-channels, weaker vs GPUs, that's why "argon2id" combines both is safest and strongest)
     (A CPU is optimized for complex, sequential tasks and decision-making, whereas a GPU is optimized for executing the same simple operation across thousands of cores in parallel. Because brute-force attacks involve trying millions of password combinations using the same repeated computations, GPUs are far more efficient for this purpose than CPUs, which is why attackers commonly rely on GPUs for large-scale password-cracking attempts.)
+    
     A side-channel attack is: Stealing secret information by observing how a system behaves, not by breaking the algorithm itself.
     Examples: Measuring execution time, Watching memory access patternsObserving CPU or cache behavior
-    - If correct passwords take slightly longer to process, an attacker can guess information from timing differences, Argon2id protects against side-channel attacks by using data-independent memory access.
-
-
-    type: argon2.argon2id,
+    - If correct passwords take slightly longer to process, an attacker can guess information from timing differences, Argon2id protects against side-channel attacks by using data-independent memory access
 
     
-    2 ** 16 = 65536 -> 65536 KB = 64 MB
+    --2 ** 16 = 65536 -> 65536 KB = 64 MB
     Argon2 must allocate 64 MB of RAM per hashing operation, when a user registers and  logs in.
     Attackers use GPUs because: GPUs are very fast and GPUs have limited memory per core, So Argon2 requires 64 MB per attempt:1 attempt → needs 64 MB so 1 million attempts → needs 64 TB of RAM ❌ So attackers cannot: run millions of guesses in parallel.
     For normal users Login attempt → uses 64 MB but normal user doesn’t notice.
-    
 
-    memoryCost: 2 ** 16,
-    
- 
+   -- timeCost: 3,
     timeCost in Argon2 means how many times the password-hashing work is repeated. If timeCost is 3, Argon2 does the same work three times, one after another. Doing the work multiple times makes password hashing slower on purpose, which is good for security because attackers have to spend more time for every password they try. For normal users, this small delay is not noticeable, but for hackers trying thousands or millions of passwords, it becomes very slow and difficult.
-    
 
-    timeCost: 3,
     
-    
-    parallelism: 1 means Argon2 uses a single CPU thread to hash the password, ensuring controlled CPU usage and stable server performance.
-    If you set the memory cost to 2**16, that means each hashing run uses 64 megabytes of memory. If you set the time cost to three, the hashing is performed three times. And if you set parallelism to two, then during each of those hashing runs, it uses two threads to do the work in parallel. So in short, three iterations of hashing, each using 64 MB of memory, and each iteration using two threads.  usage and stable server performance.
-     
-    parallelism: 2,
+    --parallelism: 2
+    forces the computer to use two CPU threads simultaneously to hash a single password. 
   });
 };
 

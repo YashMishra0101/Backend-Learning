@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
-      select: false, // 👈 never return password by default, password never leaks accidentally
+      select: false, // 👈 In Mongoose (MongoDB), adding select: false to a field in your schema means that by default, this field will NOT be returned when you query the database, never return password by default, password never leaks accidentally.
     },
   },
   { timestamps: true }

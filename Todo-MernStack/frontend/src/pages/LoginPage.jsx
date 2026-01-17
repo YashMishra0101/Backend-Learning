@@ -4,13 +4,37 @@ import { Mail, Lock, ArrowRight } from "lucide-react";
 import Layout from "../components/Layout";
 import Button from "../components/ui/Button";
 import Input from "../components/ui/Input";
+import { loginUser } from "../services/auth.service";
+import toast from "react-hot-toast";
+import { useState } from "react";
 
 const LoginPage = () => {
-  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+  const navigate = useNavigate();
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    navigate("/");
+    setLoading(true);
+    try {
+      const response = await loginUser(formData);
+      if (response.accessToken) {
+        localStorage.setItem("token", response.accessToken);
+        toast.success("Login successful!");
+        navigate("/todo");
+      }
+    } catch (error) {
+      toast.error(error.message || "Invalid credentials");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -29,32 +53,21 @@ const LoginPage = () => {
               label="Email Address"
               type="email"
               placeholder="you@example.com"
+              onChange={handleChange}
               required
+              name="email"
+              value={formData.email}
             />
 
             <Input
               label="Password"
               type="password"
               placeholder="••••••••"
+              onChange={handleChange}
               required
+              name="password"
+              value={formData.password}
             />
-
-            <div className="flex items-center justify-between text-sm">
-              <label className="flex items-center text-gray-500 cursor-pointer hover:text-gray-700">
-                <input
-                  type="checkbox"
-                  className="mr-2 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"
-                />
-                Remember me
-              </label>
-              <a
-                href="#"
-                className="text-emerald-600 hover:text-emerald-700 transition-colors"
-              >
-                Forgot password?
-              </a>
-            </div>
-
             <Button type="submit" className="w-full group">
               Sign In
               <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />

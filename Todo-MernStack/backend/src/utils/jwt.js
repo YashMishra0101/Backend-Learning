@@ -6,5 +6,5 @@ export const generateAccessToken = (payload) => {
 };
 
 export const generateRefreshToken = (payload) => {
-  return jwt.sign(payload, env.JWT_SECRET, { expiresIn: "7d" });
+  return jwt.sign(payload, env.JWT_SECRET, { expiresIn: "30d" });
 };

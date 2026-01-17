@@ -122,11 +122,10 @@ const TodoPage = () => {
             todos.map((todo) => (
               <div
                 key={todo.id}
-                className={`card-panel p-4 flex items-center justify-between group transition-all duration-200 ${
-                  todo.completed
+                className={`card-panel p-4 flex items-center justify-between group transition-all duration-200 ${todo.completed
                     ? "opacity-60 bg-gray-50"
                     : "hover:border-indigo-300"
-                }`}
+                  }`}
               >
                 {editingId === todo.id ? (
                   <div className="flex-1 flex items-center gap-3 pr-4">
@@ -149,22 +148,20 @@ const TodoPage = () => {
                     <div className="flex items-center gap-4 flex-1">
                       <button
                         onClick={() => handleToggle(todo.id)}
-                        className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${
-                          todo.completed
+                        className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${todo.completed
                             ? "bg-indigo-600 border-indigo-600"
                             : "border-gray-300 hover:border-indigo-600"
-                        }`}
+                          }`}
                       >
                         {todo.completed && (
                           <Check size={14} className="text-white" />
                         )}
                       </button>
                       <span
-                        className={`text-lg transition-all ${
-                          todo.completed
+                        className={`text-lg transition-all ${todo.completed
                             ? "line-through text-gray-400"
                             : "text-gray-900 font-medium"
-                        }`}
+                          }`}
                       >
                         {todo.text}
                       </span>
