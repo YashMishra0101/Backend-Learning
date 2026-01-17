@@ -46,8 +46,8 @@ export const updateTodo = async (req, res, next) => {
     const { id } = req.params;
 
     const todo = await Todo.findOneAndUpdate(
-      { _id: id, user: req.user._id }, //// ownership check
-      req.body,
+      { _id: id, user: req.user._id }, // ownership check
+      req.body, // This is the data to update. 'req.body' contains the new values (e.g., { text: "New Task" } or { completed: true }) sent from the frontend. Mongoose applies these changes to the found document.
       { new: true, runValidators: true }
     );
 

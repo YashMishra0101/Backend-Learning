@@ -42,7 +42,7 @@ export const register = async (req, res, next) => {
   }
 };
 
-export const login = async (req, res,next) => {
+export const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ email }).select("+password");
@@ -63,7 +63,9 @@ export const login = async (req, res,next) => {
       userId: user._id,
     });
 
-    const refreshToken = generateRefreshToken({ userId: user._id });
+    const refreshToken = generateRefreshToken({
+      userId: user._id,
+    });
 
     await RefreshToken.create({
       user: user._id,
@@ -74,7 +76,7 @@ export const login = async (req, res,next) => {
     res.status(200).json({
       success: true,
       accessToken,
-      refreshToken
+      refreshToken,
     });
   } catch (error) {
     next(error); //If a middleware function has 4 parameters, Express treats it as an error-handling middleware.
@@ -83,7 +85,7 @@ export const login = async (req, res,next) => {
 
 export const refreshAccessToken = async (req, res, next) => {
   try {
-    const {refreshToken} = req.body;
+    const { refreshToken } = req.body;
 
     if (!refreshToken) {
       return res.status(401).json({
@@ -100,7 +102,7 @@ export const refreshAccessToken = async (req, res, next) => {
     const decoded = jwt.verify(refreshToken, env.JWT_SECRET);
 
     const newAccessToken = generateAccessToken({
-      userId: decoded.userId,
+      userId: decoded.userId,//If valid, it extracts the data hidden inside the token, specifically the userId. This is like checking a fake ID card to see if the name inside is real.
     });
     res.status(200).json({
       success: true,

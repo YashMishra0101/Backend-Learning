@@ -23,7 +23,7 @@ Output: MongoDB Connected: [object Object] ->Completely useless for understandin
 
 --console.log(`MongoDB Connected, DB Host: ${connectionInstance.connection.host}`;
 
-Output: MongoDB Connected, DB Host: cluster0-shard-00-01.mongodb.net ->Readable,Useful for debugging,Professional logging 
+Output example: MongoDB Connected, DB Host: cluster0-shard-00-01.mongodb.net ->Readable,Useful for debugging,Professional logging 
 
 
 
