@@ -7,7 +7,7 @@ const api = axios.create({
   },
 });
 
-function handelRequestSuccess() {
+function handelRequestSuccess(config) {
   const token = localStorage.getItem("token");
   if (token) {
     config.headers.Authorization = "Bearer " + token;

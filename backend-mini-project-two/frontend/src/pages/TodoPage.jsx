@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import {
   Plus,
   Trash2,
@@ -14,54 +13,94 @@ import Layout from "../components/Layout";
 import Button from "../components/ui/Button";
 import Input from "../components/ui/Input";
 
+import { useState, useEffect } from "react";
+
+import {
+  getAllTodos,
+  createTodo,
+  deleteTodo,
+  updateTodo,
+} from "../services/todo.service";
+
 const TodoPage = () => {
   const navigate = useNavigate();
   const [todos, setTodos] = useState([]);
   const [newTodo, setNewTodo] = useState("");
   const [editingId, setEditingId] = useState(null);
   const [editText, setEditText] = useState("");
+  const [isLoading, setLoading] = useState(false);
 
-  const handleAddTodo = (e) => {
+  useEffect(() => {
+  fetchTodos();
+}, []);
+
+  const fetchTodos = async () => {
+    setLoading(true);
+    try {
+      const data = await getAllTodos();
+      setTodos(data);
+    } catch (error) {
+      toast.error(error.message || "Failed to load todos");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleAddTodo = async (e) => {
     e.preventDefault();
     if (!newTodo.trim()) {
       toast.error("Please enter a task");
       return;
     }
-    setTodos([...todos, { id: Date.now(), text: newTodo, completed: false }]);
-    setNewTodo("");
-    toast.success("Task added successfully");
+    try {
+      const todo = await createTodo(newTodo);
+      setTodos([todo, ...todos]);
+      setNewTodo("");
+      toast.success("Task added successfully");
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
 
-  const handleDelete = (id) => {
-    setTodos(todos.filter((todo) => todo.id !== id));
-    toast.success("Task deleted");
+  const handleDelete = async (id) => {
+    try {
+      await deleteTodo(id);
+      setTodos(todos.filter((todo) => todo._id !== id));
+      toast.success("Task deleted");
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
 
-  const handleToggle = (id) => {
-    setTodos(
-      todos.map((todo) =>
-        todo.id === id ? { ...todo, completed: !todo.completed } : todo
-      )
-    );
+  const handleToggle = async (id, currentStatus) => {
+    try {
+      const updatedTodo = await updateTodo(id, { completed: !currentStatus });
+      setTodos(todos.map((todo) => (todo._id === id ? updatedTodo : todo)));
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
 
   const startEdit = (todo) => {
-    setEditingId(todo.id);
+    setEditingId(todo._id);
     setEditText(todo.text);
   };
 
-  const saveEdit = () => {
+  const saveEdit = async () => {
     if (!editText.trim()) {
       toast.error("Task cannot be empty");
       return;
     }
-    setTodos(
-      todos.map((todo) =>
-        todo.id === editingId ? { ...todo, text: editText } : todo
-      )
-    );
-    setEditingId(null);
-    toast.success("Task updated");
+    try {
+      const updatedTodo = await updateTodo(editingId, { text: editText });
+      setTodos(
+        todos.map((todo) => (todo._id === editingId ? updatedTodo : todo)),
+      );
+      setEditingId(null);
+      toast.success("Task updated");
+    } catch (error) {
+      toast.error(error.message || "Failed to update task");
+    }
   };
 
   const cancelEdit = () => {
@@ -121,13 +160,14 @@ const TodoPage = () => {
           ) : (
             todos.map((todo) => (
               <div
-                key={todo.id}
-                className={`card-panel p-4 flex items-center justify-between group transition-all duration-200 ${todo.completed
+                key={todo._id}
+                className={`card-panel p-4 flex items-center justify-between group transition-all duration-200 ${
+                  todo.completed
                     ? "opacity-60 bg-gray-50"
                     : "hover:border-indigo-300"
-                  }`}
+                }`}
               >
-                {editingId === todo.id ? (
+                {editingId === todo._id ? (
                   <div className="flex-1 flex items-center gap-3 pr-4">
                     <Input
                       value={editText}
@@ -147,21 +187,23 @@ const TodoPage = () => {
                   <>
                     <div className="flex items-center gap-4 flex-1">
                       <button
-                        onClick={() => handleToggle(todo.id)}
-                        className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${todo.completed
+                        onClick={() => handleToggle(todo._id, todo.completed)}
+                        className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${
+                          todo.completed
                             ? "bg-indigo-600 border-indigo-600"
                             : "border-gray-300 hover:border-indigo-600"
-                          }`}
+                        }`}
                       >
                         {todo.completed && (
                           <Check size={14} className="text-white" />
                         )}
                       </button>
                       <span
-                        className={`text-lg transition-all ${todo.completed
+                        className={`text-lg transition-all ${
+                          todo.completed
                             ? "line-through text-gray-400"
                             : "text-gray-900 font-medium"
-                          }`}
+                        }`}
                       >
                         {todo.text}
                       </span>
@@ -181,7 +223,7 @@ const TodoPage = () => {
                       <Button
                         size="icon"
                         variant="ghost"
-                        onClick={() => handleDelete(todo.id)}
+                        onClick={() => handleDelete(todo._id)}
                       >
                         <Trash2
                           size={18}

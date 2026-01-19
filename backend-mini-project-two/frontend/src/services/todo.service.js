@@ -6,7 +6,7 @@ export const getAllTodos = async () => {
   try {
     const response = await api.get("/todos");
     return response.data.data;
-  } catch {
+  } catch (error) {
     throw error.response?.data || { message: "Failed to fetch todos" };
   }
 };
@@ -37,7 +37,7 @@ export const updateTodo = async (id, update) => {
 
 export const deleteTodo = async (id) => {
   try {
-    const response = await api.delete(`/todo/${id}`);
+    const response = await api.delete(`/todos/${id}`);
     return response.data?.data;
   } catch (error) {
     throw error.response?.data || { message: "Failed to delete todo" };
