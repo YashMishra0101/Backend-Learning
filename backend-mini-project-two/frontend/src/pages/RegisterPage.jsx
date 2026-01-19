@@ -5,12 +5,13 @@ import Layout from "../components/Layout";
 import Button from "../components/ui/Button";
 import Input from "../components/ui/Input";
 import { registerUser } from "../services/auth.service";
-import toast from "react-hot-toast"; // Import Toast
+import toast from "react-hot-toast";
+
 const RegisterPage = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false); //Loading State
+  const [isLoading, setIsLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -20,33 +21,31 @@ const RegisterPage = () => {
   });
 
   const handleChange = (e) => {
+    e.preventDefault();
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match!");
+      toast.error("Passwords do not match!");
       return;
     }
-
     setIsLoading(true);
     try {
-      // Call the API
+      // Calling the backend (don't send confirmPassword to the server)
       const response = await registerUser({
         name: formData.name,
         email: formData.email,
         password: formData.password,
       });
-      toast.success(response.message || "Account created successfully");
+      toast.success(response.message || "Account created");
       navigate("/login");
     } catch (error) {
-      toast.error(error.message || "Registration failed");
-    } finally {
-      setIsLoading(false);
+      toast.error(error.message || "Registration failed")
+    }finally{
+      setIsLoading(false)
     }
-
-    console.log("Registering with:", formData);
   };
 
   return (

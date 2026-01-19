@@ -1,25 +1,26 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Mail, Lock, ArrowRight } from "lucide-react";
+import { ArrowRight, Loader } from "lucide-react";
 import Layout from "../components/Layout";
 import Button from "../components/ui/Button";
 import Input from "../components/ui/Input";
 import { loginUser } from "../services/auth.service";
-import toast from "react-hot-toast";
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 const LoginPage = () => {
-  const [loading, setLoading] = useState(false);
-
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
+    e.preventDefault();
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
   const navigate = useNavigate();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -27,7 +28,8 @@ const LoginPage = () => {
       const response = await loginUser(formData);
       if (response.accessToken) {
         localStorage.setItem("token", response.accessToken);
-        toast.success("Login successful!");
+        toast.success("Login successful");
+        setLoading(true);
         navigate("/todo");
       }
     } catch (error) {
@@ -68,9 +70,15 @@ const LoginPage = () => {
               name="password"
               value={formData.password}
             />
-            <Button type="submit" className="w-full group">
-              Sign In
-              <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            <Button type="submit" className="w-full group" disabled={loading}>
+              {loading ? (
+                <Loader />
+              ) : (
+                <>
+                  Sign In
+                  <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </>
+              )}
             </Button>
           </form>
 
