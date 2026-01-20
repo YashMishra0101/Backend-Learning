@@ -4,8 +4,8 @@ import { ArrowRight, Eye, EyeOff } from "lucide-react";
 import Layout from "../components/Layout";
 import Button from "../components/ui/Button";
 import Input from "../components/ui/Input";
-import { registerUser } from "../services/auth.service";
 import toast from "react-hot-toast";
+import { registerUser } from "../services/auth.service";
 
 const RegisterPage = () => {
   const navigate = useNavigate();
@@ -43,7 +43,7 @@ const RegisterPage = () => {
       navigate("/login");
     } catch (error) {
       toast.error(error.message || "Registration failed")
-    }finally{
+    } finally {
       setIsLoading(false)
     }
   };

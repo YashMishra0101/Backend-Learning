@@ -5,6 +5,7 @@ const api = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
+  withCredentials: true,
 });
 
 function handelRequestSuccess(config) {
@@ -20,4 +21,30 @@ function handelRequestError(error) {
 }
 
 api.interceptors.request.use(handelRequestSuccess, handelRequestError);
+
+// RESPONSE INTERCEPTOR - Handle token expiration
+function handelResponseSuccess(response) {
+  return response;
+}
+
+async function handleResponseError(error) {
+  const originalRequest = error.config;
+
+  if (error.response?.status === 401 && !originalRequest._retry) {
+    originalRequest._retry = true;
+    try {
+      const response = await api.post("/auth/refresh");
+      const newToken = response.data.accessToken;
+      localStorage.setItem("token", newToken);
+      originalRequest.headers.Authorization = "Bearer " + newToken;
+      return api(originalRequest);
+    } catch (refreshError) {
+      localStorage.removeItem("token");
+      window.location.href = "/login";
+      return Promise.reject(refreshError);
+    }
+  }
+  return Promise.reject(error);
+}
+api.interceptors.response.use(handelResponseSuccess, handleResponseError);
 export default api;

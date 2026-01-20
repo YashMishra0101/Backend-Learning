@@ -18,9 +18,10 @@ function App() {
         }}
       />
       <Routes>
+        <Route path="/" element={<LoginPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-        <Route path="/" element={<TodoPage />} />
+        <Route path="/todo" element={<TodoPage />} />
         {/* Fallback route */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

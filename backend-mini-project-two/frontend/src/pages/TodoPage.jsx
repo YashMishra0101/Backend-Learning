@@ -12,7 +12,6 @@ import toast from "react-hot-toast";
 import Layout from "../components/Layout";
 import Button from "../components/ui/Button";
 import Input from "../components/ui/Input";
-
 import { useState, useEffect } from "react";
 
 import {
@@ -109,7 +108,7 @@ const TodoPage = () => {
 
   const handleLogout = () => {
     localStorage.clear();
-    sessionStorage.clear();
+    sessionStorage.clear(); //In my current app, only localStorage stores user JWT token. The sessionStorage.clear() is just extra cleanup.
     toast.success("Logged out successfully");
     navigate("/login");
   };

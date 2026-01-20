@@ -4,9 +4,9 @@ import { ArrowRight, Loader } from "lucide-react";
 import Layout from "../components/Layout";
 import Button from "../components/ui/Button";
 import Input from "../components/ui/Input";
-import { loginUser } from "../services/auth.service";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import { loginUser } from "../services/auth.service";
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({
@@ -23,7 +23,6 @@ const LoginPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
     try {
       const response = await loginUser(formData);
       if (response.accessToken) {
