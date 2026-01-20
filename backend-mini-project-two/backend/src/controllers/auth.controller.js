@@ -73,10 +73,17 @@ export const login = async (req, res, next) => {
       expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
     });
 
+    // Set refresh token as HttpOnly cookie
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: false, // Works on HTTP (set true for HTTPS/production)
+      sameSite: "lax",
+      maxAge: 30 * 24 * 60 * 60 * 1000,
+    })
+
     res.status(200).json({
       success: true,
       accessToken,
-      refreshToken,
     });
   } catch (error) {
     next(error); //If a middleware function has 4 parameters, Express treats it as an error-handling middleware.
@@ -85,7 +92,7 @@ export const login = async (req, res, next) => {
 
 export const refreshAccessToken = async (req, res, next) => {
   try {
-    const { refreshToken } = req.body;
+    const refreshToken = req.cookies.refreshToken;
 
     if (!refreshToken) {
       return res.status(401).json({
@@ -115,9 +122,15 @@ export const refreshAccessToken = async (req, res, next) => {
 
 export const logout = async (req, res, next) => {
   try {
-    const { refreshToken } = req.body;
+    const refreshToken = req.cookies.refreshToken;
 
     await RefreshToken.deleteOne({ token: refreshToken });
+
+    res.clearCookie("refreshToken", {
+      httpOnly: true,
+      secure: false, // Works on HTTP (set true for HTTPS/production)
+      sameSite: "lax",
+    })
 
     res.status(200).json({
       success: true,

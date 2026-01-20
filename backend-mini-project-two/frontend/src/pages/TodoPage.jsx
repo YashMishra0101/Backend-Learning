@@ -13,7 +13,7 @@ import Layout from "../components/Layout";
 import Button from "../components/ui/Button";
 import Input from "../components/ui/Input";
 import { useState, useEffect } from "react";
-
+import api from "../services/api";
 import {
   getAllTodos,
   createTodo,
@@ -30,8 +30,8 @@ const TodoPage = () => {
   const [isLoading, setLoading] = useState(false);
 
   useEffect(() => {
-  fetchTodos();
-}, []);
+    fetchTodos();
+  }, []);
 
   const fetchTodos = async () => {
     setLoading(true);
@@ -106,9 +106,15 @@ const TodoPage = () => {
     setEditingId(null);
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    try {
+      await api.post("/auth/logout"); //calling backend to clear cookie
+    }
+    catch (error) {
+      toast.error(error.message);
+    }
     localStorage.clear();
-    sessionStorage.clear(); //In my current app, only localStorage stores user JWT token. The sessionStorage.clear() is just extra cleanup.
+    sessionStorage.clear();
     toast.success("Logged out successfully");
     navigate("/login");
   };
@@ -160,11 +166,10 @@ const TodoPage = () => {
             todos.map((todo) => (
               <div
                 key={todo._id}
-                className={`card-panel p-4 flex items-center justify-between group transition-all duration-200 ${
-                  todo.completed
-                    ? "opacity-60 bg-gray-50"
-                    : "hover:border-indigo-300"
-                }`}
+                className={`card-panel p-4 flex items-center justify-between group transition-all duration-200 ${todo.completed
+                  ? "opacity-60 bg-gray-50"
+                  : "hover:border-indigo-300"
+                  }`}
               >
                 {editingId === todo._id ? (
                   <div className="flex-1 flex items-center gap-3 pr-4">
@@ -187,22 +192,20 @@ const TodoPage = () => {
                     <div className="flex items-center gap-4 flex-1">
                       <button
                         onClick={() => handleToggle(todo._id, todo.completed)}
-                        className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${
-                          todo.completed
-                            ? "bg-indigo-600 border-indigo-600"
-                            : "border-gray-300 hover:border-indigo-600"
-                        }`}
+                        className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${todo.completed
+                          ? "bg-indigo-600 border-indigo-600"
+                          : "border-gray-300 hover:border-indigo-600"
+                          }`}
                       >
                         {todo.completed && (
                           <Check size={14} className="text-white" />
                         )}
                       </button>
                       <span
-                        className={`text-lg transition-all ${
-                          todo.completed
-                            ? "line-through text-gray-400"
-                            : "text-gray-900 font-medium"
-                        }`}
+                        className={`text-lg transition-all ${todo.completed
+                          ? "line-through text-gray-400"
+                          : "text-gray-900 font-medium"
+                          }`}
                       >
                         {todo.text}
                       </span>

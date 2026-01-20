@@ -2,6 +2,7 @@
 
 import express from "express";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 
 import { notFound } from "./middlewares/notFound.middleware.js";
 import { errorHandler } from "./middlewares/error.middleware.js";
@@ -19,6 +20,7 @@ app.use(
 );
 
 app.use(express.json()); // Parse JSON body
+app.use(cookieParser());
 
 // Routes
 app.use("/api/auth", authRoutes);
@@ -27,6 +29,8 @@ app.use("/api/todos", todoRoutes);
 // Error handling
 app.use(errorHandler);
 app.use(notFound);
+
+
 
 export default app;
 
