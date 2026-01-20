@@ -27,6 +27,7 @@ const LoginPage = () => {
       const response = await loginUser(formData);
       if (response.accessToken) {
         localStorage.setItem("token", response.accessToken);
+        localStorage.setItem("userName", response.user.name);
         toast.success("Login successful");
         setLoading(true);
         navigate("/todo");

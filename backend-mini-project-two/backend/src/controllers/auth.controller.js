@@ -84,6 +84,9 @@ export const login = async (req, res, next) => {
     res.status(200).json({
       success: true,
       accessToken,
+      user: {
+        name: user.name
+      },
     });
   } catch (error) {
     next(error); //If a middleware function has 4 parameters, Express treats it as an error-handling middleware.

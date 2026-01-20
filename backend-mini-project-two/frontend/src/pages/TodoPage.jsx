@@ -71,6 +71,18 @@ const TodoPage = () => {
     }
   };
 
+  const handleLogout = async () => {
+    try {
+      await api.post("/auth/logout"); //calling backend to clear cookie
+    } catch (error) {
+      toast.error(error.message);
+    }
+    localStorage.clear();
+    sessionStorage.clear();
+    toast.success("Logged out successfully");
+    navigate("/login");
+  };
+
   const handleToggle = async (id, currentStatus) => {
     try {
       const updatedTodo = await updateTodo(id, { completed: !currentStatus });
@@ -106,20 +118,7 @@ const TodoPage = () => {
     setEditingId(null);
   };
 
-  const handleLogout = async () => {
-    try {
-      await api.post("/auth/logout"); //calling backend to clear cookie
-    }
-    catch (error) {
-      toast.error(error.message);
-    }
-    localStorage.clear();
-    sessionStorage.clear();
-    toast.success("Logged out successfully");
-    navigate("/login");
-  };
-
-  const dummyName = "Yash";
+  const userName = localStorage.getItem("userName") || "User";
 
   return (
     <Layout>
@@ -128,7 +127,7 @@ const TodoPage = () => {
         <div className="flex items-center justify-between mb-8 card-panel p-6">
           <div>
             <h1 className="text-2xl font-bold text-gray-900">
-              Welcome, {dummyName}
+              Welcome, {userName}
             </h1>
             <p className="text-gray-500 text-sm mt-1">
               My Tasks • {todos.filter((t) => !t.completed).length} tasks
